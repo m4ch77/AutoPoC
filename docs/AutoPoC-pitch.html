@@ -113,8 +113,8 @@
     <h1>AutoPoC</h1>
     <h1 class="muted" style="font-size:40px; font-weight:700; margin-top:8px;">Autonomous Exploit-Proof Agent</h1>
     <div class="tagline">
-      취약점 <b class="cyan">"의심"</b>을 보고서로 남기지 않는다.<br>
-      공격이 실제로 성립함을 <b class="accent">실행되는 PoC로 스스로 증명</b>하는 에이전트.
+      취약점을 <b class="cyan">"의심"</b>으로 보고서에 남기지 않습니다.<br>
+      공격이 실제로 성립함을 <b class="accent">실행되는 PoC로 스스로 증명</b>하는 에이전트입니다.
     </div>
     <div class="badges">
       <span class="badge">실행 증명</span>
@@ -132,10 +132,10 @@
   <div class="head"><span class="no">01</span><h2>문제 정의</h2></div>
   <div class="rule"></div>
   <ul>
-    <li><b>감사의 병목은 "확인"이다.</b> 정적 분석·LLM 도구는 취약 <span class="cyan">가능성</span>을 쏟아내지만, 진짜 성립 여부 판단은 사람 몫 — 느리고 비싸다.</li>
-    <li><b>"가능성 리포트"는 신뢰할 수 없다.</b> 오탐(false positive)이 섞여 있어, 리포트 한 줄마다 사람이 다시 검증해야 한다.</li>
-    <li><b>재현이 어렵다.</b> 같은 입력에도 결과가 흔들리면 회귀 검증·감사 추적이 불가능하다.</li>
-    <li class="s">→ 필요한 것: 공격 성립을 <b class="accent">스스로 · 재현 가능하게 · 오탐 없이</b> 증명하는 자율 에이전트.</li>
+    <li><b>감사의 병목은 "확인"에 있습니다.</b> 정적 분석·LLM 도구는 취약 <span class="cyan">가능성</span>을 쏟아내지만, 실제 성립 여부를 판단하는 일은 여전히 사람의 몫이며 느리고 비용이 큽니다.</li>
+    <li><b>"가능성 리포트"는 신뢰하기 어렵습니다.</b> 오탐(false positive)이 섞여 있어, 리포트 한 줄마다 사람이 다시 검증해야 합니다.</li>
+    <li><b>재현이 어렵습니다.</b> 같은 입력에도 결과가 흔들리면 회귀 검증과 감사 추적이 불가능합니다.</li>
+    <li class="s">→ 그래서 필요한 것은, 공격 성립을 <b class="accent">스스로 · 재현 가능하게 · 오탐 없이</b> 증명하는 자율 에이전트입니다.</li>
   </ul>
   <div class="foot"><span>문제 정의</span><span>02 / 10</span></div>
 </section>
@@ -147,19 +147,19 @@
   <div class="cards">
     <div class="card">
       <h3><span class="ico"></span>입력 &amp; 공격자 능력</h3>
-      <p>타깃 컨트랙트 소스 + 불변식(<i>Invariants</i>) + manifest를 입력받는다. 공격자는 임의 트랜잭션 시퀀스·재진입·외부 콜·자금 이동을 수행할 수 있다.</p>
+      <p>타깃 컨트랙트 소스와 불변식(<i>Invariants</i>), manifest를 입력으로 받습니다. 공격자는 임의의 트랜잭션 시퀀스와 재진입, 외부 콜, 자금 이동을 수행할 수 있습니다.</p>
     </div>
     <div class="card">
       <h3><span class="ico"></span>성공의 정의</h3>
-      <p>조직위 하네스 <b>IInvariants.checkAll</b>이 실제로 깨져야만 성공. <b class="accent">에이전트도 LLM도 판정 권한이 없다</b> — 판정은 forge 실행뿐.</p>
+      <p>조직위 하네스의 <b>IInvariants.checkAll</b>이 실제로 깨질 때에만 성공으로 인정됩니다. <b class="accent">에이전트도 LLM도 판정 권한을 갖지 않으며</b>, 판정은 오직 forge 실행이 내립니다.</p>
     </div>
     <div class="card">
       <h3><span class="ico"></span>신뢰 경계</h3>
-      <p>LLM은 <b>소스 추론만</b> 한다 — 파일·웹 접근 없음, 타깃별 정답 하드코딩 없음. 모든 후보는 하네스 실행으로만 채택된다.</p>
+      <p>LLM은 <b>오직 소스만 보고 추론</b>합니다. 파일·웹 접근이 없고 타깃별 정답 하드코딩도 없으며, 모든 후보는 하네스 실행을 통해서만 채택됩니다.</p>
     </div>
     <div class="card">
       <h3><span class="ico"></span>안전장치</h3>
-      <p>멀쩡한 타깃엔 거짓 성공을 만들지 않고 <b class="cyan">기권(exit 1)</b>. 네트워크는 허용된 LLM API 예외만 — 오프라인에선 완전 차단으로도 동작.</p>
+      <p>정상 컨트랙트에는 거짓 성공을 만들지 않고 <b class="cyan">기권합니다(exit 1)</b>. 네트워크는 허용된 LLM API 예외만 사용하며, 오프라인에서는 완전 차단 상태로도 동작합니다.</p>
     </div>
   </div>
   <div class="foot"><span>위협 모델</span><span>03 / 10</span></div>
@@ -182,7 +182,7 @@
       <span class="chip">Cloud LLM</span>
       <span class="chip opt">Local LLM</span>
       <span class="chip">Heuristic</span>
-      <span class="poolnote">지식 카드(RAG-lite)가 LLM 프롬프트에 힌트 주입 · <b>첫 실행-증명 후보</b>가 채택된다</span>
+      <span class="poolnote">지식 카드(RAG-lite)가 LLM 프롬프트에 힌트를 주입하며, 가장 먼저 실행으로 증명된 후보가 채택됩니다</span>
     </div>
     <div class="down">▼ &nbsp;각 후보</div>
     <div class="node gate">VERIFICATION GATE — forge 하네스로 실제 실행 → <b>checkAll이 깨지는가?</b></div>
@@ -192,7 +192,7 @@
       <div class="br no"><b>예산 소진 → 기권</b><br>거짓 성공 없이 <b>exit 1</b></div>
     </div>
   </div>
-  <div class="foot"><span>시스템 아키텍처 — 판정 권한은 검증 게이트(forge)뿐, 정답 하드코딩 없음</span><span>04 / 10</span></div>
+  <div class="foot"><span>시스템 아키텍처 — 판정은 검증 게이트(forge)가 내리며, 정답 하드코딩은 없습니다</span><span>04 / 10</span></div>
 </section>
 
 <!-- 5. BRAIN ENSEMBLE & ROUTING -->
@@ -200,7 +200,7 @@
   <div class="head"><span class="no">04</span><h2>두뇌 앙상블 &amp; 라우팅</h2><span class="tag">하나의 검증 게이트</span></div>
   <div class="rule"></div>
   <p style="font-size:16.5px; color:#aab7c9; line-height:1.4; margin-bottom:4px;">
-    Triage가 유형을 분류하면 그 유형에 <b style="color:#dbe4f0">가장 강한 두뇌를 먼저</b> 돌린다. 모든 두뇌는 동일한 실행 검증 게이트 뒤에 있어, 약한 두뇌의 오답은 채택되지 않는다.</p>
+    Triage가 유형을 분류하면 그 유형에 <b style="color:#dbe4f0">가장 강한 두뇌를 먼저</b> 실행합니다. 모든 두뇌는 동일한 실행 검증 게이트 뒤에 놓이므로, 약한 두뇌의 오답은 채택되지 않습니다.</p>
   <table>
     <tr><th>두뇌</th><th>담당(강점) 유형</th><th>방식</th><th class="c">오프라인</th><th class="c">결정론</th></tr>
     <tr><td><b>Fuzzer</b></td><td>접근제어 · 산술</td><td>invariant 퍼징 → <b>축약 반례</b> → PoC 합성 (사전지식 0)</td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td></tr>
@@ -209,69 +209,69 @@
     <tr><td><b>Heuristic</b></td><td>tx.origin · delegatecall 등</td><td>정적 공격 템플릿(결정론 최후수단)</td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td></tr>
     <tr><td><b>Local LLM</b> <span class="muted">(선택)</span></td><td>오프라인 추론</td><td>Ollama <code>qwen2.5-coder</code> — 이미지에 구울 때만</td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="part">캐시로</span></td></tr>
   </table>
-  <div class="gate">"그냥 AI"도 "그냥 퍼저"도 아니다 — <b>각 유형의 최강 도구를 하나의 검증 게이트 뒤에 결합.</b> 재진입처럼 퍼저가 못 잡는 클래스는 전용 브레인이, 퍼즐형은 LLM이 담당한다.</div>
+  <div class="gate">"그냥 AI"도 "그냥 퍼저"도 아닙니다. <b>각 유형의 최강 도구를 하나의 검증 게이트 뒤에 결합했습니다.</b> 재진입처럼 퍼저가 다루기 어려운 클래스는 전용 브레인이, 퍼즐형은 LLM이 담당합니다.</div>
   <div class="foot"><span>두뇌 앙상블 &amp; 라우팅</span><span>05 / 10</span></div>
 </section>
 
 <!-- 6. STRENGTH 1 -->
 <section class="slide">
-  <div class="head"><span class="no">강점 01</span><h2>증명되지 않으면 성공이 아니다</h2><span class="tag">실행 · 오탐</span></div>
+  <div class="head"><span class="no">강점 01</span><h2>증명되지 않으면 성공이 아닙니다</h2><span class="tag">실행 · 오탐</span></div>
   <div class="rule"></div>
   <div class="cards">
     <div class="card">
       <h3><span class="ico"></span>실행 증명 게이트</h3>
-      <p>모든 후보는 <b>forge 하네스로 실제 실행</b>되어 <b>checkAll을 실제로 깰 때만</b> 채택된다. "될 것 같다"는 후보는 산출물이 되지 못한다. 판정 권한은 하네스뿐.</p>
+      <p>모든 후보는 <b>forge 하네스에서 실제로 실행</b>되며, <b>checkAll을 실제로 깨뜨릴 때에만</b> 채택됩니다. "될 것 같다"는 후보는 산출물이 되지 못합니다. 판정 권한은 하네스에만 있습니다.</p>
     </div>
     <div class="card">
       <h3><span class="ico"></span>오탐 0 — 멀쩡하면 기권</h3>
-      <p>취약하지 않은 타깃은 예산을 다 써도 <b class="cyan">exit 1로 기권</b>한다. 거짓 성공(false positive)을 구조적으로 만들지 않는다.</p>
+      <p>취약하지 않은 타깃에서는 예산을 모두 소진하더라도 <b class="cyan">exit 1로 기권</b>합니다. 거짓 성공(false positive)을 구조적으로 만들지 않습니다.</p>
     </div>
   </div>
-  <div class="valuebar">제출되는 모든 성공은 <b>이미 실행으로 증명된 것</b> — 실행·재현 실패 리스크를 산출 단계에서 제거하고, 취약/정상 컨트랙트를 <b>exit 0 / exit 1</b>로 명확히 가른다.</div>
+  <div class="valuebar">제출되는 모든 성공은 <b>이미 실행으로 증명된 결과</b>입니다. 실행·재현 실패의 위험을 산출 단계에서 제거하고, 취약한 컨트랙트와 정상 컨트랙트를 <b>exit 0과 exit 1</b>로 명확히 구분합니다.</div>
   <div class="foot"><span>강점 ① 실행 증명 &amp; 오탐 0</span><span>06 / 10</span></div>
 </section>
 
 <!-- 7. STRENGTH 2 -->
 <section class="slide">
-  <div class="head"><span class="no">강점 02</span><h2>언제 돌려도 똑같다</h2><span class="tag">결정론</span></div>
+  <div class="head"><span class="no">강점 02</span><h2>언제 돌려도 똑같습니다</h2><span class="tag">결정론</span></div>
   <div class="rule"></div>
   <div class="cards three">
     <div class="card">
       <h3><span class="ico"></span>솔루션 캐시</h3>
-      <p>성공한 PoC를 <b>(타깃 소스 해시, 시드)</b>로 고정. 재실행은 LLM을 다시 부르지 않고 <b>바이트 동일</b>하게 리플레이한다.</p>
+      <p>성공한 PoC를 <b>(타깃 소스 해시, 시드)</b>로 고정합니다. 재실행 시에는 LLM을 다시 호출하지 않고, <b>바이트 단위로 동일하게</b> 리플레이합니다.</p>
     </div>
     <div class="card">
       <h3><span class="ico"></span>LLM 비의존 결정론</h3>
-      <p>퍼저 시드 고정 + 오프라인 결정론 두뇌 우선. 결정론이 <b>LLM 온도·샘플링에 흔들리지 않는다.</b></p>
+      <p>퍼저 시드를 고정하고 오프라인 결정론 두뇌를 우선합니다. 덕분에 결정론이 <b>LLM 온도·샘플링에 흔들리지 않습니다.</b></p>
     </div>
     <div class="card">
       <h3><span class="ico"></span>검증됨</h3>
-      <p>오프라인 <b>N=3 바이트 동일</b> 신규 생성 + 클라우드 <b>캐시 리플레이 동일</b>로 실측 확인.</p>
+      <p>오프라인 <b>N=3회 신규 생성이 바이트 동일</b>하고, 클라우드는 <b>캐시 리플레이가 동일</b>함을 실측으로 확인했습니다.</p>
     </div>
   </div>
-  <div class="valuebar">동일 조건 → <b>동일한 PoC</b>. 생성 경로(캐시 없는 재생성)와 재현 경로(캐시 리플레이)가 모두 결정론적이라, 회귀 검증과 감사 추적이 가능하다.</div>
+  <div class="valuebar">동일한 조건에서는 <b>동일한 PoC</b>가 나옵니다. 생성 경로(캐시 없는 재생성)와 재현 경로(캐시 리플레이)가 모두 결정론적이므로, 회귀 검증과 감사 추적이 가능합니다.</div>
   <div class="foot"><span>강점 ② 결정론 &amp; 캐시 일관성</span><span>07 / 10</span></div>
 </section>
 
 <!-- 8. STRENGTH 3 -->
 <section class="slide">
-  <div class="head"><span class="no">강점 03</span><h2>베끼지 않고, 스스로 뚫는다</h2><span class="tag">자체 도출 · 일반화</span></div>
+  <div class="head"><span class="no">강점 03</span><h2>베끼지 않고, 스스로 뚫습니다</h2><span class="tag">자체 도출 · 일반화</span></div>
   <div class="rule"></div>
   <div class="cards three">
     <div class="card">
       <h3><span class="ico"></span>스스로 도출</h3>
-      <p>정답 하드코딩 없음. 클라우드 브레인은 <b>파일·웹 접근이 없어</b> 넘겨준 소스만 본다. 퍼저는 <b>사전지식 0</b>으로 반례를 탐색 — 공개 익스플로잇 "재현"이 아니다.</p>
+      <p>정답 하드코딩이 없습니다. 클라우드 브레인은 파일·웹 접근이 없어 <b>전달된 소스만 참고</b>하고, 퍼저는 <b>사전지식 없이</b> 반례를 탐색합니다. 공개된 익스플로잇을 "재현"하는 것이 아닙니다.</p>
     </div>
     <div class="card">
       <h3><span class="ico"></span>미공개 일반화</h3>
-      <p>모델 폴백 체인(sonnet-5 → opus-4-8)이 처음 보는 유형을 추론으로 공략. 실측 <b>포팅 미공개 8/8</b> 발견.</p>
+      <p>모델 폴백 체인(sonnet-5 → opus-4-8)이 처음 보는 유형을 추론으로 공략합니다. 실측에서 포팅한 <b>미공개 유형 8건을 모두 발견</b>했습니다.</p>
     </div>
     <div class="card">
       <h3><span class="ico"></span>최소 PoC</h3>
-      <p>퍼저의 <b>축약된 반례</b>에서, 호출하는 인터페이스만 선언한 <b>self-contained</b> <code>run(address)</code> PoC를 합성.</p>
+      <p>퍼저가 <b>축약한 반례</b>로부터, 호출하는 인터페이스만 선언한 <b>self-contained</b> <code>run(address)</code> PoC를 합성합니다.</p>
     </div>
   </div>
-  <div class="valuebar">에이전트가 <b>소스로부터 직접 도출</b>한 경로이고(암기·카피 불가), 처음 보는 타깃으로 <b>일반화</b>되며, 산출물은 <b>재현 가능한 최소 PoC</b>다.</div>
+  <div class="valuebar">에이전트가 <b>소스로부터 직접 도출</b>한 경로이며(암기·카피가 불가능합니다), 처음 보는 타깃으로도 <b>일반화</b>되고, 산출물은 <b>재현 가능한 최소 PoC</b>입니다.</div>
   <div class="foot"><span>강점 ③ 자체 도출 · 일반화 · 최소 PoC</span><span>08 / 10</span></div>
 </section>
 
@@ -301,14 +301,14 @@
   <div class="head"><span class="no">06</span><h2>왜 AutoPoC인가</h2></div>
   <div class="rule"></div>
   <div class="cards three">
-    <div class="card"><h3><span class="ico"></span>증명 기반</h3><p>"의심"이 아니라 <b class="accent">실행되는 PoC</b>. 하네스가 깨져야만 성공 — 사람이 다시 검증할 필요가 없다.</p></div>
-    <div class="card"><h3><span class="ico"></span>캐시 결정론</h3><p>같은 입력 → <b class="cyan">바이트 동일</b> 결과. LLM 비결정성과 무관하게 재현·감사 가능.</p></div>
-    <div class="card"><h3><span class="ico"></span>오탐 0</h3><p>멀쩡한 타깃엔 기권. 리포트의 모든 성공이 <b>실제 성립</b>임을 보장.</p></div>
-    <div class="card"><h3><span class="ico"></span>스스로 도출</h3><p>파일·정답 접근 없이 소스에서 직접 유도 — 공개 익스플로잇 카피가 아니다.</p></div>
-    <div class="card"><h3><span class="ico"></span>미공개 일반화</h3><p>폴백 체인으로 처음 보는 유형까지 공략, 포팅 8/8.</p></div>
-    <div class="card"><h3><span class="ico"></span>최소 PoC</h3><p>축약 반례 기반 self-contained <code>run(address)</code>.</p></div>
+    <div class="card"><h3><span class="ico"></span>증명 기반</h3><p>"의심"이 아니라 <b class="accent">실행되는 PoC</b>입니다. 하네스가 깨질 때에만 성공이므로, 사람이 다시 검증할 필요가 없습니다.</p></div>
+    <div class="card"><h3><span class="ico"></span>캐시 결정론</h3><p>같은 입력에는 <b class="cyan">바이트 동일한</b> 결과가 나옵니다. LLM의 비결정성과 무관하게 재현과 감사가 가능합니다.</p></div>
+    <div class="card"><h3><span class="ico"></span>오탐 0</h3><p>정상 타깃에는 기권합니다. 리포트의 모든 성공이 <b>실제로 성립</b>함을 보장합니다.</p></div>
+    <div class="card"><h3><span class="ico"></span>스스로 도출</h3><p>파일·정답 접근 없이 소스에서 직접 유도합니다. 공개 익스플로잇의 카피가 아닙니다.</p></div>
+    <div class="card"><h3><span class="ico"></span>미공개 일반화</h3><p>폴백 체인으로 처음 보는 유형까지 공략하며, 포팅 8/8을 달성했습니다.</p></div>
+    <div class="card"><h3><span class="ico"></span>최소 PoC</h3><p>축약 반례에 기반한 self-contained <code>run(address)</code>입니다.</p></div>
   </div>
-  <div class="gate" style="margin-top:22px; font-size:20px; text-align:center;">실행되는 PoC = 신뢰. <b>AutoPoC는 취약점을 주장하지 않고 증명한다.</b></div>
+  <div class="gate" style="margin-top:22px; font-size:20px; text-align:center;">실행되는 PoC가 곧 신뢰입니다. <b>AutoPoC는 취약점을 주장하지 않고 증명합니다.</b></div>
   <div class="foot"><span>AutoPoC — Autonomous Exploit-Proof Agent · TRUST404 Track 04</span><span>10 / 10</span></div>
 </section>
 
