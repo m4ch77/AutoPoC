@@ -1,0 +1,27 @@
+# Runtime scratch (agent outputs from local runs) — never submit these
+out/
+**/out/
+*.log
+
+# Solution cache = runtime replay state. NOT committed: baking solved PoCs would
+# look like hardcoded answers (RUBRIC ④). Determinism is proven by re-executing
+# the emitted Exploit.sol, not by a shipped cache.
+agent/.solution_cache.json
+**/.solution_cache.json
+
+# Foundry deps/artifacts (forge-std is re-cloned in the Docker build)
+harness/lib/
+harness/cache/
+harness/out/
+
+# Python bytecode
+__pycache__/
+**/__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+
+# Scratch A/B-test outputs
+.ab_out/
+**/.ab_out/
