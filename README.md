@@ -124,6 +124,6 @@ echo "exit=$?"     # 0=증명(PROVEN) · 1=기권 · 2=오류
 ├─ Exploit.sol            산출물 예시(무수정)
 ├─ agent/                 에이전트 코드 + Dockerfile + entrypoint + 재현 스크립트
 ├─ harness/               Foundry 하네스(무변경)
-├─ demo-targets/          번들 데모 타깃(PiggyBank 취약 · GuardedBank 안전) — 무키 클론 데모용
+├─ demo-targets/          번들 데모 타깃(PiggyBank 취약 · LockBox 클라우드 · GuardedBank 안전)
 └─ docs/                  문서 · 피치덱 · 감사 보고서
 ```
