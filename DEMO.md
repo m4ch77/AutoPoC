@@ -30,6 +30,10 @@ docker images autopoc            # autopoc:latest 확인
 장면당 약 1초, 클라우드도 5초 내외라 실행 시간은 총 10초 남짓 — 5분은 설명·화면 전환용으로 충분하다.
 
 > 빌드는 위 0단계에서 미리 끝내 두고, 녹화에서는 실행 장면만 보여준다.
+>
+> **명령만 순서대로 담은 실행 파일:** [`demo.sh`](demo.sh) — 레포 루트에서
+> `DC="docker --context colima" bash demo.sh` 로 한 번에, 또는 장면별로 복붙.
+> (`../trust404-track04-participant`·`../dvd-track4-targets`가 레포의 형제 폴더여야 한다.)
 
 ### 준비 (녹화 시작 전)
 
