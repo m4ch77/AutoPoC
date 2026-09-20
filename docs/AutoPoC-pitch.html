@@ -15,7 +15,7 @@
   .slide {
     position: relative;
     width: 13.333in; height: 7.5in;
-    padding: 0.62in 0.8in;
+    padding: 0.6in 0.8in;
     page-break-after: always;
     overflow: hidden;
     background:
@@ -28,13 +28,13 @@
 
   .kicker { font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: #4cc9f0; font-weight: 700; }
   h1 { font-size: 66px; font-weight: 800; letter-spacing: -1px; line-height: 1.02; }
-  h2 { font-size: 34px; font-weight: 800; letter-spacing: -0.5px; }
+  h2 { font-size: 33px; font-weight: 800; letter-spacing: -0.5px; }
   .accent { color: #39d98a; }
   .cyan { color: #4cc9f0; }
   .muted { color: #94a3b8; }
-  .rule { height: 3px; width: 62px; background: linear-gradient(90deg,#4cc9f0,#39d98a); border-radius: 3px; margin: 14px 0 22px; }
+  .rule { height: 3px; width: 62px; background: linear-gradient(90deg,#4cc9f0,#39d98a); border-radius: 3px; margin: 12px 0 18px; }
 
-  .head { display:flex; align-items:baseline; gap:16px; margin-bottom: 6px; }
+  .head { display:flex; align-items:baseline; gap:16px; margin-bottom: 4px; }
   .head .no { font-size: 14px; color:#4b5b74; font-weight:700; letter-spacing:2px; }
   .head .tag { margin-left:auto; font-size:13px; color:#39d98a; background:rgba(57,217,138,0.10); border:1px solid rgba(57,217,138,0.3); border-radius:999px; padding:6px 14px; font-weight:700; }
 
@@ -51,14 +51,29 @@
   .card p { font-size: 16px; color:#aab7c9; line-height:1.46; }
   .card p b { color:#dbe4f0; font-weight:700; }
   .card .ico { width:22px; height:22px; border-radius:6px; background:linear-gradient(135deg,#4cc9f0,#39d98a); display:inline-block; flex:none; }
-  .card code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size:14px; color:#8fe3c4; background:rgba(57,217,138,0.10); padding:1px 5px; border-radius:5px; }
+  .card code, td code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size:14px; color:#8fe3c4; background:rgba(57,217,138,0.10); padding:1px 5px; border-radius:5px; }
+
+  /* architecture dataflow */
+  .arch { display:flex; flex-direction:column; align-items:stretch; gap:6px; margin-top:6px; }
+  .node { background: rgba(255,255,255,0.045); border:1px solid rgba(120,150,190,0.25); border-radius:10px; padding:10px 18px; text-align:center; font-size:16.5px; color:#dbe4f0; }
+  .node b { color:#fff; }
+  .node small { color:#8ba0bd; font-size:13.5px; }
+  .node.in { background:rgba(76,201,240,0.08); border-color:rgba(76,201,240,0.35); }
+  .node.gate { background:rgba(57,217,138,0.09); border-color:rgba(57,217,138,0.45); font-weight:700; color:#eafff5; font-size:17px; }
+  .down { text-align:center; color:#4cc9f0; font-size:14px; line-height:1; }
+  .pool { display:flex; flex-wrap:wrap; gap:9px; justify-content:center; align-items:center; background:rgba(255,255,255,0.03); border:1px dashed rgba(120,150,190,0.35); border-radius:10px; padding:11px; }
+  .chip { font-size:15px; font-weight:700; color:#cfe0f2; background:rgba(76,201,240,0.12); border:1px solid rgba(76,201,240,0.35); border-radius:8px; padding:6px 13px; }
+  .chip.opt { color:#9fb0c6; background:rgba(255,255,255,0.04); border-style:dashed; }
+  .poolnote { flex-basis:100%; text-align:center; font-size:13px; color:#8ba0bd; margin-top:2px; }
+  .branches { display:flex; gap:10px; margin-top:2px; }
+  .br { flex:1; border-radius:10px; padding:10px 14px; font-size:14px; line-height:1.32; }
+  .br.ok { background:rgba(57,217,138,0.10); border:1px solid rgba(57,217,138,0.4); color:#d7f5e6; }
+  .br.loop { background:rgba(76,201,240,0.08); border:1px solid rgba(76,201,240,0.35); color:#d3ecfb; }
+  .br.no { background:rgba(255,255,255,0.04); border:1px solid rgba(120,150,190,0.28); color:#aeb9ca; }
+  .br b { color:#fff; }
 
   .flow { display:flex; align-items:stretch; gap:12px; margin: 18px 0 6px; }
-  .step { flex:1; background: rgba(76,201,240,0.06); border:1px solid rgba(76,201,240,0.28); border-radius:12px; padding:16px; text-align:center; }
-  .step .t { font-size:16px; font-weight:700; color:#fff; }
-  .step .d { font-size:13.5px; color:#9fb0c6; margin-top:6px; line-height:1.35; }
-  .arrow { align-self:center; color:#4cc9f0; font-size:26px; font-weight:800; }
-  .gate { margin-top:8px; background: rgba(57,217,138,0.08); border:1px solid rgba(57,217,138,0.35); border-radius:12px; padding:14px 18px; font-size:18px; color:#d7f5e6; }
+  .gate { margin-top:8px; background: rgba(57,217,138,0.08); border:1px solid rgba(57,217,138,0.35); border-radius:12px; padding:13px 18px; font-size:17px; color:#d7f5e6; }
   .gate b { color:#39d98a; }
   .valuebar { margin-top:auto; background: rgba(76,201,240,0.07); border-left:3px solid #4cc9f0; border-radius:8px; padding:13px 18px; font-size:17px; color:#cfe0f2; }
   .valuebar b { color:#fff; }
@@ -68,12 +83,15 @@
   .stat .n { font-size: 40px; font-weight:800; color:#39d98a; line-height:1; }
   .stat .l { font-size: 14.5px; color:#a7b4c6; margin-top:9px; line-height:1.3; }
 
-  table { width:100%; border-collapse: collapse; margin-top: 6px; font-size: 16.5px; }
-  th, td { text-align:left; padding: 10px 12px; border-bottom: 1px solid rgba(120,150,190,0.16); }
-  th { color:#4cc9f0; font-size:13px; letter-spacing:1.5px; text-transform:uppercase; }
+  table { width:100%; border-collapse: collapse; margin-top: 6px; font-size: 16px; }
+  th, td { text-align:left; padding: 9px 12px; border-bottom: 1px solid rgba(120,150,190,0.16); }
+  th { color:#4cc9f0; font-size:12.5px; letter-spacing:1.2px; text-transform:uppercase; }
   td.v { color:#39d98a; font-weight:700; }
+  td.c { text-align:center; }
+  .yes { color:#39d98a; font-weight:700; }
+  .part { color:#e0b64a; font-weight:700; }
 
-  .foot { position:absolute; bottom:0.42in; left:0.8in; right:0.8in; display:flex; justify-content:space-between; font-size:12.5px; color:#4b5b74; letter-spacing:1px; }
+  .foot { position:absolute; bottom:0.4in; left:0.8in; right:0.8in; display:flex; justify-content:space-between; font-size:12.5px; color:#4b5b74; letter-spacing:1px; }
 
   .title-wrap { flex:1; display:flex; flex-direction:column; justify-content:center; }
   .logo { display:flex; align-items:center; gap:16px; margin-bottom: 26px; }
@@ -106,7 +124,7 @@
       <span class="badge">미공개 일반화</span>
     </div>
   </div>
-  <div class="foot"><span>AutoPoC — Autonomous Exploit-Proof Agent</span><span>01 / 09</span></div>
+  <div class="foot"><span>AutoPoC — Autonomous Exploit-Proof Agent</span><span>01 / 10</span></div>
 </section>
 
 <!-- 2. PROBLEM -->
@@ -119,7 +137,7 @@
     <li><b>재현이 어렵다.</b> 같은 입력에도 결과가 흔들리면 회귀 검증·감사 추적이 불가능하다.</li>
     <li class="s">→ 필요한 것: 공격 성립을 <b class="accent">스스로 · 재현 가능하게 · 오탐 없이</b> 증명하는 자율 에이전트.</li>
   </ul>
-  <div class="foot"><span>문제 정의</span><span>02 / 09</span></div>
+  <div class="foot"><span>문제 정의</span><span>02 / 10</span></div>
 </section>
 
 <!-- 3. THREAT MODEL -->
@@ -144,31 +162,58 @@
       <p>멀쩡한 타깃엔 거짓 성공을 만들지 않고 <b class="cyan">기권(exit 1)</b>. 네트워크는 허용된 LLM API 예외만 — 오프라인에선 완전 차단으로도 동작.</p>
     </div>
   </div>
-  <div class="foot"><span>위협 모델</span><span>03 / 09</span></div>
+  <div class="foot"><span>위협 모델</span><span>03 / 10</span></div>
 </section>
 
-<!-- 4. HOW IT WORKS -->
+<!-- 4. SYSTEM ARCHITECTURE -->
 <section class="slide">
-  <div class="head"><span class="no">03</span><h2>동작 방식</h2></div>
+  <div class="head"><span class="no">03</span><h2>시스템 아키텍처</h2><span class="tag">데이터플로</span></div>
   <div class="rule"></div>
-  <div class="flow">
-    <div class="step"><div class="t">Triage</div><div class="d">수 ms 정적 분류로 취약 유형 판별</div></div>
-    <div class="arrow">→</div>
-    <div class="step"><div class="t">오프라인 우선 라우팅</div><div class="d">퍼저 · 재진입 브레인 · 휴리스틱 템플릿 (결정론·무비용)</div></div>
-    <div class="arrow">→</div>
-    <div class="step"><div class="t">클라우드 폴백</div><div class="d">sonnet-5 → opus-4-8 체인, 키 있을 때만</div></div>
-    <div class="arrow">→</div>
-    <div class="step"><div class="t">검증 게이트</div><div class="d">forge 하네스로 실제 실행</div></div>
+  <div class="arch">
+    <div class="node in">입력 &nbsp;·&nbsp; 타깃 소스 &nbsp;·&nbsp; <b>Invariants.sol</b> &nbsp;·&nbsp; manifest.json</div>
+    <div class="down">▼</div>
+    <div class="node"><b>TRIAGE</b> — 정적 분류로 취약 유형(vuln_class) 판별 &nbsp;<small>수 ms</small></div>
+    <div class="down">▼</div>
+    <div class="node"><b>ROUTER</b> — 유형별 두뇌 우선순위 결정 &nbsp;<small>오프라인 결정론 두뇌를 클라우드보다 먼저</small></div>
+    <div class="down">▼</div>
+    <div class="pool">
+      <span class="chip">Fuzzer</span>
+      <span class="chip">Reentrancy</span>
+      <span class="chip">Cloud LLM</span>
+      <span class="chip opt">Local LLM</span>
+      <span class="chip">Heuristic</span>
+      <span class="poolnote">지식 카드(RAG-lite)가 LLM 프롬프트에 힌트 주입 · <b>첫 실행-증명 후보</b>가 채택된다</span>
+    </div>
+    <div class="down">▼ &nbsp;각 후보</div>
+    <div class="node gate">VERIFICATION GATE — forge 하네스로 실제 실행 → <b>checkAll이 깨지는가?</b></div>
+    <div class="branches">
+      <div class="br ok"><b>깨짐 → PROVEN</b><br>솔루션 캐시에 고정 → <code>Exploit.sol</code> + <code>attempts.log</code> · <b>exit 0</b></div>
+      <div class="br loop"><b>안 깨짐 → 자가수정 ↺</b><br>실패를 피드백으로 다음 두뇌/재시도에 주입</div>
+      <div class="br no"><b>예산 소진 → 기권</b><br>거짓 성공 없이 <b>exit 1</b></div>
+    </div>
   </div>
-  <div class="gate">각 후보 → 하네스 실행 → <b>checkAll이 깨지면 PROVEN</b>, 아니면 다음 후보. 정답 하드코딩 없이 소스·퍼징·추론에서만 유도.</div>
-  <ul style="margin-top:16px; gap:11px;">
-    <li><b>오프라인 우선</b> — 싼 결정론 두뇌를 클라우드보다 앞세워 결정론 강화 + API 비용 절감.</li>
-    <li><b>판정 권한은 하네스뿐</b> — 에이전트·LLM은 성공을 선언하지 못한다.</li>
-  </ul>
-  <div class="foot"><span>동작 방식</span><span>04 / 09</span></div>
+  <div class="foot"><span>시스템 아키텍처 — 판정 권한은 검증 게이트(forge)뿐, 정답 하드코딩 없음</span><span>04 / 10</span></div>
 </section>
 
-<!-- 5. STRENGTH 1 -->
+<!-- 5. BRAIN ENSEMBLE & ROUTING -->
+<section class="slide">
+  <div class="head"><span class="no">04</span><h2>두뇌 앙상블 &amp; 라우팅</h2><span class="tag">하나의 검증 게이트</span></div>
+  <div class="rule"></div>
+  <p style="font-size:16.5px; color:#aab7c9; line-height:1.4; margin-bottom:4px;">
+    Triage가 유형을 분류하면 그 유형에 <b style="color:#dbe4f0">가장 강한 두뇌를 먼저</b> 돌린다. 모든 두뇌는 동일한 실행 검증 게이트 뒤에 있어, 약한 두뇌의 오답은 채택되지 않는다.</p>
+  <table>
+    <tr><th>두뇌</th><th>담당(강점) 유형</th><th>방식</th><th class="c">오프라인</th><th class="c">결정론</th></tr>
+    <tr><td><b>Fuzzer</b></td><td>접근제어 · 산술</td><td>invariant 퍼징 → <b>축약 반례</b> → PoC 합성 (사전지식 0)</td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td></tr>
+    <tr><td><b>Reentrancy</b></td><td>재진입</td><td>외부콜-선행 함수 탐지 → 재진입 액터 합성</td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td></tr>
+    <tr><td><b>Cloud LLM</b></td><td>오라클 · delegatecall · 신종</td><td>소스 추론 + 실패 자가수정 · 폴백 체인 <code>sonnet-5→opus-4-8</code></td><td class="c muted">키 필요</td><td class="c"><span class="part">캐시로</span></td></tr>
+    <tr><td><b>Heuristic</b></td><td>tx.origin · delegatecall 등</td><td>정적 공격 템플릿(결정론 최후수단)</td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td></tr>
+    <tr><td><b>Local LLM</b> <span class="muted">(선택)</span></td><td>오프라인 추론</td><td>Ollama <code>qwen2.5-coder</code> — 이미지에 구울 때만</td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="part">캐시로</span></td></tr>
+  </table>
+  <div class="gate">"그냥 AI"도 "그냥 퍼저"도 아니다 — <b>각 유형의 최강 도구를 하나의 검증 게이트 뒤에 결합.</b> 재진입처럼 퍼저가 못 잡는 클래스는 전용 브레인이, 퍼즐형은 LLM이 담당한다.</div>
+  <div class="foot"><span>두뇌 앙상블 &amp; 라우팅</span><span>05 / 10</span></div>
+</section>
+
+<!-- 6. STRENGTH 1 -->
 <section class="slide">
   <div class="head"><span class="no">강점 01</span><h2>증명되지 않으면 성공이 아니다</h2><span class="tag">실행 · 오탐</span></div>
   <div class="rule"></div>
@@ -183,10 +228,10 @@
     </div>
   </div>
   <div class="valuebar">제출되는 모든 성공은 <b>이미 실행으로 증명된 것</b> — 실행·재현 실패 리스크를 산출 단계에서 제거하고, 취약/정상 컨트랙트를 <b>exit 0 / exit 1</b>로 명확히 가른다.</div>
-  <div class="foot"><span>강점 ① 실행 증명 &amp; 오탐 0</span><span>05 / 09</span></div>
+  <div class="foot"><span>강점 ① 실행 증명 &amp; 오탐 0</span><span>06 / 10</span></div>
 </section>
 
-<!-- 6. STRENGTH 2 -->
+<!-- 7. STRENGTH 2 -->
 <section class="slide">
   <div class="head"><span class="no">강점 02</span><h2>언제 돌려도 똑같다</h2><span class="tag">결정론</span></div>
   <div class="rule"></div>
@@ -205,10 +250,10 @@
     </div>
   </div>
   <div class="valuebar">동일 조건 → <b>동일한 PoC</b>. 생성 경로(캐시 없는 재생성)와 재현 경로(캐시 리플레이)가 모두 결정론적이라, 회귀 검증과 감사 추적이 가능하다.</div>
-  <div class="foot"><span>강점 ② 결정론 &amp; 캐시 일관성</span><span>06 / 09</span></div>
+  <div class="foot"><span>강점 ② 결정론 &amp; 캐시 일관성</span><span>07 / 10</span></div>
 </section>
 
-<!-- 7. STRENGTH 3 -->
+<!-- 8. STRENGTH 3 -->
 <section class="slide">
   <div class="head"><span class="no">강점 03</span><h2>베끼지 않고, 스스로 뚫는다</h2><span class="tag">자체 도출 · 일반화</span></div>
   <div class="rule"></div>
@@ -227,12 +272,12 @@
     </div>
   </div>
   <div class="valuebar">에이전트가 <b>소스로부터 직접 도출</b>한 경로이고(암기·카피 불가), 처음 보는 타깃으로 <b>일반화</b>되며, 산출물은 <b>재현 가능한 최소 PoC</b>다.</div>
-  <div class="foot"><span>강점 ③ 자체 도출 · 일반화 · 최소 PoC</span><span>07 / 09</span></div>
+  <div class="foot"><span>강점 ③ 자체 도출 · 일반화 · 최소 PoC</span><span>08 / 10</span></div>
 </section>
 
-<!-- 8. VERIFICATION -->
+<!-- 9. VERIFICATION -->
 <section class="slide">
-  <div class="head"><span class="no">04</span><h2>검증 결과</h2><span class="tag">최종 이미지 실측</span></div>
+  <div class="head"><span class="no">05</span><h2>검증 결과</h2><span class="tag">최종 이미지 실측</span></div>
   <div class="rule"></div>
   <div class="stats">
     <div class="stat"><div class="n">6/6</div><div class="l">공개셋<br>(취약 4 발견 + 멀쩡 2 기권)</div></div>
@@ -248,12 +293,12 @@
     <tr><td>결정론</td><td class="v">바이트 동일</td><td class="muted">오프라인 N=3 재생성 + 클라우드 캐시 리플레이</td></tr>
     <tr><td>채점 조건</td><td class="v">준수</td><td class="muted">Foundry v1.0.0 · 하네스 byte-identical · validate-submission PASS</td></tr>
   </table>
-  <div class="foot"><span>검증 결과</span><span>08 / 09</span></div>
+  <div class="foot"><span>검증 결과</span><span>09 / 10</span></div>
 </section>
 
-<!-- 9. CLOSING -->
+<!-- 10. CLOSING -->
 <section class="slide">
-  <div class="head"><span class="no">05</span><h2>왜 AutoPoC인가</h2></div>
+  <div class="head"><span class="no">06</span><h2>왜 AutoPoC인가</h2></div>
   <div class="rule"></div>
   <div class="cards three">
     <div class="card"><h3><span class="ico"></span>증명 기반</h3><p>"의심"이 아니라 <b class="accent">실행되는 PoC</b>. 하네스가 깨져야만 성공 — 사람이 다시 검증할 필요가 없다.</p></div>
@@ -264,7 +309,7 @@
     <div class="card"><h3><span class="ico"></span>최소 PoC</h3><p>축약 반례 기반 self-contained <code>run(address)</code>.</p></div>
   </div>
   <div class="gate" style="margin-top:22px; font-size:20px; text-align:center;">실행되는 PoC = 신뢰. <b>AutoPoC는 취약점을 주장하지 않고 증명한다.</b></div>
-  <div class="foot"><span>AutoPoC — Autonomous Exploit-Proof Agent · TRUST404 Track 04</span><span>09 / 09</span></div>
+  <div class="foot"><span>AutoPoC — Autonomous Exploit-Proof Agent · TRUST404 Track 04</span><span>10 / 10</span></div>
 </section>
 
 </body>
