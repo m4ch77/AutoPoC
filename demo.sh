@@ -1,62 +1,53 @@
 #!/usr/bin/env bash
-# AutoPoC 시연 녹화용 명령 스크립트 (세 문제를 한 영상에).
+# AutoPoC 시연 스크립트 — 클론하면 바로 되는 무키 오프라인 데모.
 #
-# 실행 위치: 레포 루트(track04-agent-mvp/). 형제 폴더로 타깃 번들이 있어야 함:
-#   ../trust404-track04-participant/targets  (조직위 공개셋)
-#   ../dvd-track4-targets/Truster            (장면 ②, 로컬 보유 포팅 타깃)
-#
-# 실행 방법:
+# 번들 타깃(demo-targets/)만 쓰므로 API 키도, 외부 타깃 번들도 필요 없다.
+# 레포 루트에서 실행:
 #   로컬 colima:  DC="docker --context colima" bash demo.sh
-#   채점 재현:    bash demo.sh            # 순정 docker (공개셋 = 장면 ①③만)
+#   채점 재현:    bash demo.sh
 #
-# 클라우드 장면(②)은 ANTHROPIC_API_KEY 필요. 아래는 파일에서 읽어 화면 노출 방지.
-# (블록별로 복붙해 장면마다 나레이션해도 되고, 통째로 bash demo.sh 해도 된다.)
+# (블록별로 복붙해 장면마다 나레이션해도 되고, 통째로 실행해도 된다.)
+# 선택: 클라우드 일반화 장면은 맨 아래 주석 참고(키 + 외부 타깃 필요).
 
 DC="${DC:-docker}"                                          # colima면: DC="docker --context colima"
-export ANTHROPIC_API_KEY="${ANTHROPIC_API_KEY:-$(cat ~/.trust404_key 2>/dev/null)}"
-P=../trust404-track04-participant/targets                   # 조직위 공개셋
 
-# ── 장면 ① 오프라인 증명 + 결정론 (ReentrantVault, --network=none, 2회) ──────
-echo "== 장면 ① 오프라인 증명 + 결정론 =="
-rm -rf out/d1a out/d1b && mkdir -p out/d1a out/d1b
+# ── 데모 1: 취약 타깃(PiggyBank) → 실행 증명 + 결정론 (오프라인, 무키, 2회) ──
+echo "== 데모 1: 취약 타깃 PiggyBank → 실행 증명 + 결정론 =="
+rm -rf out/pb_a out/pb_b && mkdir -p out/pb_a out/pb_b
 for r in a b; do
   $DC run --rm --network=none \
-    -v "$PWD/$P/ReentrantVault:/work/target:ro" -v "$PWD/out/d1$r:/work/out" \
+    -v "$PWD/demo-targets/PiggyBank:/work/target:ro" -v "$PWD/out/pb_$r:/work/out" \
     autopoc \
-    --contract /work/target/src/ReentrantVault.sol \
+    --contract /work/target/src/PiggyBank.sol \
     --invariants /work/target/Invariants.sol \
     --manifest  /work/target/manifest.json \
-    --out /work/out --timeout 150 --seed 42 --no-cache
+    --out /work/out --timeout 120 --seed 42 --no-cache
   echo "run $r exit=$?"                                     # 0 = PROVEN
 done
-cat out/d1a/attempts.log                                    # 1  reentrancy  PROVEN  vaultSolvent
-cat out/d1a/Exploit.sol                                     # 생성된 PoC(무수정)
-shasum -a 256 out/d1a/Exploit.sol out/d1b/Exploit.sol       # 두 해시 동일 = 결정론
+cat out/pb_a/attempts.log                                   # 1  reentrancy  PROVEN  bankSolvent
+cat out/pb_a/Exploit.sol                                    # 생성된 PoC(무수정)
+shasum -a 256 out/pb_a/Exploit.sol out/pb_b/Exploit.sol     # 두 해시 동일 = 결정론
 
-# ── 장면 ② 클라우드 일반화 (Truster, 키 필요) ──────────────────────────────
-echo "== 장면 ② 클라우드 일반화 =="
-T=../dvd-track4-targets/Truster                             # 공개 CTF(DVD) 포팅 = 공개셋 외 타깃
-rm -rf out/d2 && mkdir -p out/d2
-$DC run --rm \
-  -e ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY" \
-  -v "$PWD/$T:/work/target:ro" -v "$PWD/out/d2:/work/out" \
-  autopoc \
-  --contract /work/target/src/TrusterLenderPool.sol \
-  --invariants /work/target/Invariants.sol \
-  --manifest  /work/target/manifest.json \
-  --out /work/out --timeout 300 --seed 42 --max-attempts 8
-echo "exit=$?"                                              # 0 = PROVEN (클라우드)
-cat out/d2/attempts.log                                     # cloud-llm 전략으로 PROVEN
-
-# ── 장면 ③ 오탐 0 (SafeVault, --network=none) ──────────────────────────────
-echo "== 장면 ③ 오탐 0 (정상 타깃 기권) =="
-rm -rf out/d3 && mkdir -p out/d3
+# ── 데모 2: 정상 타깃(GuardedBank) → 오탐 0 기권 (오프라인, 무키) ───────────
+echo "== 데모 2: 정상 타깃 GuardedBank → 오탐 0 기권 =="
+rm -rf out/gb && mkdir -p out/gb
 $DC run --rm --network=none \
-  -v "$PWD/$P/SafeVault:/work/target:ro" -v "$PWD/out/d3:/work/out" \
+  -v "$PWD/demo-targets/GuardedBank:/work/target:ro" -v "$PWD/out/gb:/work/out" \
   autopoc \
-  --contract /work/target/src/SafeVault.sol \
+  --contract /work/target/src/GuardedBank.sol \
   --invariants /work/target/Invariants.sol \
   --manifest  /work/target/manifest.json \
-  --out /work/out --timeout 300 --seed 42 --max-attempts 8
+  --out /work/out --timeout 120 --seed 42 --max-attempts 5
 echo "exit=$?"                                              # 1 = 기권
-cat out/d3/Exploit.sol                                      # "// no candidate" (채택 후보 없음)
+cat out/gb/Exploit.sol                                      # "// no candidate" (채택 후보 없음)
+
+# ── (선택) 데모 3: 클라우드 일반화 — 키 + 공개셋 외 타깃 있을 때만 ──────────
+# 오프라인 두뇌가 못 잡는 타깃을 클라우드 LLM이 추론으로 증명(self-validation 루프).
+# export ANTHROPIC_API_KEY="$(cat ~/.trust404_key)"
+# T=../dvd-track4-targets/Truster                           # 로컬 보유 포팅 타깃(레포 미포함)
+# rm -rf out/cloud && mkdir -p out/cloud
+# $DC run --rm -e ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY" \
+#   -v "$PWD/$T:/work/target:ro" -v "$PWD/out/cloud:/work/out" autopoc \
+#   --contract /work/target/src/TrusterLenderPool.sol --invariants /work/target/Invariants.sol \
+#   --manifest /work/target/manifest.json --out /work/out --timeout 300 --seed 42 --max-attempts 8
+# echo "exit=$?"; cat out/cloud/attempts.log                # cloud-llm#1 실패→피드백→#2 PROVEN
