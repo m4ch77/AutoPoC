@@ -1,21 +1,22 @@
 #!/usr/bin/env python3
-"""Combined exploit-proving agent: FUZZER (discovery) + LOCAL LLM (reasoning) +
-HEURISTICS (fallback), all behind a single EXECUTION verification gate.
+"""Combined exploit-proving agent: FUZZER (discovery) + REENTRANCY +
+CLOUD LLM (reasoning) + HEURISTICS (fallback), all behind a single EXECUTION
+verification gate.
 
 Why this shape
 --------------
 * A cloud LLM alone = "just an AI" (censorship + non-determinism + API key).
 * A fuzzer alone = "just a fuzzer" (no reasoning for puzzle-like bugs).
-* So we combine: a coverage-guided fuzzer *discovers* invariant-breaking call
-  sequences with zero prior knowledge (deterministic, offline, uncensored), and
-  a LOCAL LLM (no content filter, offline) *reasons* about what the fuzzer can't
-  crack. Everything is proven by real execution, so a weak local model's
-  mistakes are filtered out.
+* So we combine: cheap deterministic brains *discover* invariant-breaking call
+  sequences with zero prior knowledge (offline, no API cost), and a strong
+  CLOUD LLM *reasons* about what they can't crack (only when a key is present).
+  Everything is proven by real execution, so a model's mistakes are filtered out.
 
 Brains are tried in order and the first EXECUTION-PROVEN candidate wins:
-    1. FuzzerBrain  - Foundry invariant fuzzing -> parse counterexample -> PoC
-    2. LocalLLMBrain- talks to a local Ollama server (offline, uncensored)
-    3. HeuristicBrain- static templates (last-resort, deterministic)
+    1. FuzzerBrain     - Foundry invariant fuzzing -> parse counterexample -> PoC
+    2. ReentrancyBrain - synthesize a reentering actor for the reentrancy class
+    3. CloudLLMBrain   - strong cloud model (Anthropic), active only with a key
+    4. HeuristicBrain  - static templates (last-resort, deterministic)
 
 A solution cache pins a proven PoC by (target hash, seed) so re-runs are
 byte-identical (generation determinism), independent of any LLM.
@@ -311,10 +312,13 @@ class ReentrancyBrain:
         return Candidate(strategy=f"reentrancy(wd={vuln.name})", code=code) if code else None
 
 
-# ── LocalLLMBrain: offline, uncensored, talks to an Ollama server ────────────
+# ── CloudLLMBrain: strong cloud model (Anthropic), reasons over the source ───
 
-class LocalLLMBrain:
-    name = "local-llm"
+class CloudLLMBrain:
+    """Strong cloud model (Anthropic). Uses the grading sandbox's permitted LLM
+    API network exception. Only active when an API key is present; otherwise the
+    orchestrator skips it and falls back to the fuzzer/heuristics."""
+    name = "cloud-llm"
 
     _SYSTEM = (
         "You are an expert smart-contract security engineer working on the TRUST404 "
@@ -344,51 +348,6 @@ class LocalLLMBrain:
         "funds this contract with 10 ETH before calling run(target); block/time are "
         "fixed. Goal: make the named invariant predicate evaluate to false after run()."
     )
-
-    def __init__(self, url: Optional[str] = None, model: Optional[str] = None,
-                 seed: int = 42, max_calls: int = 4):
-        self.url = (url or os.environ.get("TRUST404_LLM_URL", "http://localhost:11434")).rstrip("/")
-        self.model = model or os.environ.get("TRUST404_LLM_MODEL", "qwen2.5-coder:7b")
-        self.seed = seed
-        self.max_calls = max_calls
-        self._calls = 0
-
-    def next(self, ctx: Context, history: list) -> Optional[Candidate]:
-        if self._calls >= self.max_calls:
-            return None
-        self._calls += 1
-        code = self._ask(ctx, history)
-        if code is None:
-            return None
-        return Candidate(strategy=f"local-llm#{self._calls}", code=code)
-
-    def _ask(self, ctx: Context, history: list) -> Optional[str]:
-        messages = _build_messages(self._SYSTEM, ctx, history)
-        text = self._post(messages)
-        return _extract_exploit(text) if text else None
-
-    def _post(self, messages: list) -> Optional[str]:
-        """Local Ollama chat endpoint. Returns raw text or None on error."""
-        import urllib.request
-        body = json.dumps({
-            "model": self.model, "stream": False,
-            "options": {"temperature": 0, "seed": self.seed},
-            "messages": messages,
-        }).encode()
-        req = urllib.request.Request(f"{self.url}/api/chat", data=body,
-                                     headers={"Content-Type": "application/json"}, method="POST")
-        try:
-            with urllib.request.urlopen(req, timeout=180) as resp:
-                return json.loads(resp.read().decode()).get("message", {}).get("content", "")
-        except Exception:
-            return None  # no local server / error -> degrade
-
-
-class CloudLLMBrain(LocalLLMBrain):
-    """Strong cloud model (Anthropic). Uses the grading sandbox's permitted LLM
-    API network exception. Only active when an API key is present; otherwise the
-    orchestrator skips it and falls back to local/fuzzer/heuristics."""
-    name = "cloud-llm"
 
     def __init__(self, api_key: Optional[str] = None, model: Optional[str] = None,
                  seed: int = 42, max_calls: int = 4):
@@ -431,6 +390,11 @@ class CloudLLMBrain(LocalLLMBrain):
         self._calls += 1
         code = self._ask(ctx, history)
         return Candidate(strategy=f"cloud-llm#{self._calls}", code=code) if code else None
+
+    def _ask(self, ctx: Context, history: list) -> Optional[str]:
+        messages = _build_messages(self._SYSTEM, ctx, history)
+        text = self._post(messages)
+        return _extract_exploit(text) if text else None
 
     def _post(self, messages: list) -> Optional[str]:
         import urllib.request
@@ -585,7 +549,6 @@ def route(ctx: Context, contract_path: str, invariants_path: str, seed: int):
 
     fuzzer = FuzzerBrain(contract_path, invariants_path, seed=seed)
     cloud = CloudLLMBrain(seed=seed)      # active only with an API key
-    local = LocalLLMBrain(seed=seed)      # active only with a local Ollama
     heur = HeuristicBrain()
 
     top = tr.top
@@ -600,14 +563,14 @@ def route(ctx: Context, contract_path: str, invariants_path: str, seed: int):
     # classes so it never delays the cloud lane; the cheap heuristic still goes
     # first there (it catches e.g. tx.origin bypass offline).
     if top in ("access_control", "arithmetic"):
-        order = [fuzzer, heur, cloud, local]          # fuzzer cracks these fast, heur before cloud
+        order = [fuzzer, heur, cloud]                 # fuzzer cracks these fast, heur before cloud
     elif top == "reentrancy":
-        order = [ReentrancyBrain(seed=seed), heur, cloud, local, fuzzer]  # actor synth first
+        order = [ReentrancyBrain(seed=seed), heur, cloud, fuzzer]  # actor synth first
     elif top in ("oracle", "delegatecall", "tx_origin",
                  "storage_read", "randomness", "selfdestruct_force"):
-        order = [heur, cloud, local, fuzzer]          # cheap templates, then reason, slow fuzz last
+        order = [heur, cloud, fuzzer]                 # cheap templates, then reason, slow fuzz last
     else:  # unknown / likely-clean
-        order = [fuzzer, heur, cloud, local]          # cheap quick fuzz + templates, then reason
+        order = [fuzzer, heur, cloud]                 # cheap quick fuzz + templates, then reason
     return order, tr
 
 
@@ -650,7 +613,7 @@ def main(argv: list[str]) -> int:
                 return 0
 
     # triage -> route to the strongest tool first (CloudLLMBrain is a no-op
-    # without an API key; LocalLLMBrain a no-op without a local Ollama).
+    # without an API key, so key-less runs use the deterministic brains only).
     brains, tr = route(ctx, args.contract, args.invariants, args.seed)
     sys.stderr.write(f"triage: top={tr.top} ranked={tr.ranked} -> order={[b.name for b in brains]}\n")
     verify = _verify_fn(ctx, args.contract, args.invariants)

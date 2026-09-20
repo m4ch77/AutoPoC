@@ -7,18 +7,18 @@
 타깃별 정답을 하드코딩하지 않는다.
 - **퍼저(발견):** invariant 퍼징으로 불변식 깨는 호출을 사전지식 없이 탐색 → 반례→PoC 합성 (접근제어·산술에 강함).
 - **재진입 브레인:** 외부 call이 상태 갱신보다 먼저 오는 함수를 찾아 재진입 액터를 합성 (평범한 퍼저가 못 하는 재진입 담당).
-- **LLM(추론):** 키 있으면 강한 **클라우드 모델**(허용된 LLM API 예외), 없으면 오프라인 **로컬 Ollama**(`qwen2.5-coder:7b`). 실패를 피드백받아 자가수정 (오라클·delegatecall·지식형·미공개 유형 일반화).
+- **LLM(추론):** 키가 있으면 강한 **클라우드 모델**(허용된 LLM API 예외)이 소스를 추론하고, 실패를 피드백받아 자가수정한다 (오라클·delegatecall·지식형·미공개 유형 일반화).
 - **휴리스틱(폴백):** 검증된 정적 템플릿.
 
 핵심은 "검증 게이트가 진짜 지능"이라는 점이다. 퍼저·LLM이 무엇을 내놓든 실제로 실행해
-불변식이 깨져야만 성공으로 인정하므로, 약한 로컬 모델의 오답이나 퍼저의 헛발질이
+불변식이 깨져야만 성공으로 인정하므로, LLM의 오답이나 퍼저의 헛발질이
 그대로 제출되지 않는다.
 
 ## 2. 에이전트 아키텍처
 - **트리아지+라우터:** `triage.classify()`가 유형을 분류하고 `route()`가 유형별로 두뇌 순서를
   정한다 — 재진입→재진입 브레인, 접근제어·산술→퍼저, 오라클·delegatecall·tx.origin·난수 등→LLM,
   그 외→휴리스틱(나머지 두뇌는 폴백으로 뒤에 붙음).
-- 브레인: **FuzzerBrain / ReentrancyBrain / CloudLLMBrain / LocalLLMBrain / HeuristicBrain**.
+- 브레인: **FuzzerBrain / ReentrancyBrain / CloudLLMBrain / HeuristicBrain**.
 - `solve()` 제어 루프: `brain.next(ctx, history)` → `verify(code)`(forge) → PROVEN이면 종료,
   아니면 관찰(실패 사유)을 history에 넣어 다음 시도로. (Reason→Act→Observe)
 - 검증기는 의존성 주입식이라 forge/키 없이 루프 로직만 단위 테스트 가능(`selftest_loop.py`).
@@ -42,8 +42,7 @@
 오프라인 해결(클라우드 호출 0) → 정탐 수는 그대로, 비용↓·결정론↑.
 
 ## 4. LLM 사용 여부와 프롬프트 개요
-- **두 경로 지원, 강한 쪽 우선.**
-  (a) **클라우드**: `ANTHROPIC_API_KEY`(또는 `LLM_API_KEY`)가 있으면 채점 샌드박스가 허용하는
+- **클라우드 LLM 경로.** `ANTHROPIC_API_KEY`(또는 `LLM_API_KEY`)가 있으면 채점 샌드박스가 허용하는
   **LLM API 예외**로 강한 모델을 **폴백 체인**(1순위 `claude-sonnet-5` → 폴백 `claude-opus-4-8`)으로
   호출한다 — 1순위가 거부/빈응답/지속 에러면 자동으로 다음 모델로 넘어간다(거부=미발견이므로 안전망).
   실측: 강제로 `opus-5→opus-4-8` 체인 시 opus-5 거부→opus-4-8 폴백→PROVEN. 실제로는 Sonnet이 거의
@@ -51,15 +50,13 @@
   `TRUST404_CLOUD_MODEL="m"`(단일).
   **실측 주의:** `claude-opus-5`는 bare `api.anthropic.com`에서 익스플로잇 생성 프롬프트를
   **안전 거부**(`stop_reason="refusal"`, 3/3)하므로 기본값에서 제외했다(Sonnet-5/Sonnet-4-5/
-  Haiku-4-5는 정상 동작·게이트 통과). `_post`는 `max_tokens=4000`(유효 익스플로잇은 1K 토큰 미만 —
-  16000은 멀쩡/실패 호출에서 thinking 토큰만 태워 비쌌음, `TRUST404_MAX_TOKENS`로 조정)·`timeout=240s`·5xx/429
+  Haiku-4-5는 정상 동작·게이트 통과). `_post`는 `max_tokens=16000`(신형 모델은 코드 출력 전 thinking에 토큰을 많이 써서,
+  멀티컨트랙트 익스플로잇(예: GuildToken)은 4000/8000이면 빈 응답으로 잘렸음 — `TRUST404_MAX_TOKENS`로 조정)·`timeout=240s`·5xx/429
   지수백오프 3회 재시도·빈응답 로깅·**thinking 블록 제외 텍스트 추출**로 하드닝했고, `temperature`는
   신형 모델이 거부(HTTP 400)해 제거했다(결정론은 게이트+캐시가 담당).
-  (b) **로컬**: 키가 없고 이미지에 모델이 베이킹돼 있으면 오프라인 Ollama
-  (`qwen2.5-coder:7b`, `http://localhost:11434`)를 쓴다 — 완전 오프라인·무검열.
 - **프롬프트:** "인가된 TRUST404 벤치마크의 보안 감사자(의도적 취약·실자금 없음·샌드박스 전용)"
   프레이밍 + 정확한 파일 스켈레톤 강제 + 타깃 소스 + 불변식 술어 이름 + (재시도 시) 이전 실패 사유.
-  로컬은 temperature=0; 클라우드는 신형 모델 제약으로 temperature 미지정(캐시로 재현 보장).
+  클라우드는 신형 모델 제약으로 temperature 미지정(캐시로 재현 보장).
 - **지식 카드(DeFiHackLabs 증류, RAG-lite):** 트리아지가 유형을 분류하면
   `knowledge.card_for()`가 그 유형의 공격 패턴 카드(5~15줄)를 프롬프트 앞에 `LIKELY CLASS`
   힌트로 주입한다. DeFiHackLabs의 fork·플래시론 실제 사례를 **로컬 no-fork 하네스 용어로
@@ -71,17 +68,11 @@
   - **카드 분류는 실제 소스와 대조 완료:** 9개 유형이 SunWeb3Sec의 클래스 정리 레포
     (DeFiVulnLabs, 48종)의 실제 항목과 1:1 매핑된다(reentrancy/read-only, price manipulation,
     first-deposit/precision, private-data, storage-collision 등).
-  - **효과는 로컬 7b로 실측(A/B):** NaiveOracle(오라클, 다단계)에선 카드 없이는 방향을 못 잡던
-    모델이 카드 주입 시 정답 시퀀스(faucet→pool swap→deposit→borrow)를 생성했다(단, 7b는
-    멀티컨트랙트 배선을 못 맞춰 최종 증명까진 실패). 반면 OpenVault(접근제어, 단순)에선 카드가
-    오히려 약한 모델을 산만하게 해 무카드(2시도 PROVEN)보다 나빴다. → **카드는 "모델이 계획을
-    못 세우는 어려운 유형"에서 이득이 크고, 단순 유형에선 노이즈가 될 수 있다.** 라우터가 단순
-    유형(접근제어·산술)을 퍼저에 먼저 보내므로 실제 파이프라인에선 이 부작용이 대체로 회피된다.
-    강한 클라우드 모델은 배선/산만 문제에 덜 취약할 것으로 보이나 **키 없이는 미검증**이다.
-  - 검증 파일: `agent/selftest_knowledge.py`(주입 로직 5/5, 오프라인), `agent/selftest_llm_ab.py`
-    (로컬 모델 A/B). AI 경로 자체는 OpenVault에서 로컬 7b가 실제로 PROVEN(피드백 루프로 자가수정)해
-    end-to-end 동작을 확인했다.
-- **degrade:** 키·서버·응답이 없거나 거부/파싱 실패면 즉시 다음 두뇌(퍼저 결과/휴리스틱)로
+  - **적용 원칙:** 카드는 "모델이 계획을 세우기 어려운 유형"(오라클 다단계·delegatecall 등)에서
+    이득이 크고, 단순 유형에선 노이즈가 될 수 있다. 라우터가 단순 유형(접근제어·산술)을 퍼저에
+    먼저 보내므로 실제 파이프라인에선 이 부작용이 대체로 회피된다.
+  - 검증 파일: `agent/selftest_knowledge.py`(주입 로직 5/5, 오프라인).
+- **degrade:** 키·응답이 없거나 거부/파싱 실패면 즉시 다음 두뇌(퍼저 결과/휴리스틱)로
   넘어간다. LLM은 "있으면 강해지는 옵션"이며 필수 경로가 아니다(키 없어도 오프라인 동작).
 
 ## 5. 결정론 보장 방법
@@ -91,15 +82,13 @@
   요소에 의존하지 않는다). **실측 확인:** 고정 Docker 이미지에서 `--network=none`으로 캐시 없이
   (`--no-cache`) N=10 재현한 결과 10/10 PROVEN, `Exploit.sol` 해시 1종(바이트 동일)이었다
   (`agent/selftest_determinism.sh`, ReentrantVault 기준).
-- **생성 단계:** 로컬 LLM은 `temperature=0`+`seed`, 퍼저는 `FOUNDRY_FUZZ_SEED`로 seed를
+- **생성 단계:** 퍼저는 `FOUNDRY_FUZZ_SEED`로 seed를
   고정한다. 다만 퍼저 반례의 **구체 인자값은 달라질 수 있고**(항상 "깨는" 결과는 동일),
   최종 산출물의 **바이트 동일 재현은 솔루션 캐시**가 `(타깃 해시, seed)`로 핀하여 보장한다.
 - **검증 게이트가 LLM 비결정성을 흡수:** 코드가 미세하게 달라도 "불변식 파괴"만 채택된다.
 - 휴리스틱 경로는 정적 템플릿이라 완전 결정론.
 
 ## 6. 한계
-- 로컬 7b는 단일 컨트랙트의 흔한 취약점엔 강하지만, 복잡·크로스컨트랙트 추론은 약할 수
-  있다(피드백 루프가 일부 보완).
 - 퍼저는 재진입·퍼즐형(스토리지 슬롯 읽기·가스 튜닝)을 직접 못 깬다 → 재진입은 재진입
   브레인이, 나머지 지식형은 LLM/휴리스틱이 담당한다.
 - 반례→PoC 합성은 address/uint/bool 인자와 단일-발신자 시퀀스 위주로 지원하며, 복잡한

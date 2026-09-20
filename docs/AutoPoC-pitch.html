@@ -180,7 +180,6 @@
       <span class="chip">Fuzzer</span>
       <span class="chip">Reentrancy</span>
       <span class="chip">Cloud LLM</span>
-      <span class="chip opt">Local LLM</span>
       <span class="chip">Heuristic</span>
       <span class="poolnote">지식 카드(RAG-lite)가 LLM 프롬프트에 힌트를 주입하며, 가장 먼저 실행으로 증명된 후보가 채택됩니다</span>
     </div>
@@ -207,7 +206,6 @@
     <tr><td><b>Reentrancy</b></td><td>재진입</td><td>외부콜-선행 함수 탐지 → 재진입 액터 합성</td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td></tr>
     <tr><td><b>Cloud LLM</b></td><td>오라클 · delegatecall · 신종</td><td>소스 추론 + 실패 자가수정 · 폴백 체인 <code>sonnet-5→opus-4-8</code></td><td class="c muted">키 필요</td><td class="c"><span class="part">캐시로</span></td></tr>
     <tr><td><b>Heuristic</b></td><td>tx.origin · delegatecall 등</td><td>정적 공격 템플릿(결정론 최후수단)</td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td></tr>
-    <tr><td><b>Local LLM</b> <span class="muted">(선택)</span></td><td>오프라인 추론</td><td>Ollama <code>qwen2.5-coder</code> — 이미지에 구울 때만</td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="part">캐시로</span></td></tr>
   </table>
   <div class="gate">"그냥 AI"도 "그냥 퍼저"도 아닙니다. <b>각 유형의 최강 도구를 하나의 검증 게이트 뒤에 결합했습니다.</b> 재진입처럼 퍼저가 다루기 어려운 클래스는 전용 브레인이, 퍼즐형은 LLM이 담당합니다.</div>
   <div class="foot"><span>두뇌 앙상블 &amp; 라우팅</span><span>05 / 10</span></div>

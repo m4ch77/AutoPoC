@@ -9,7 +9,7 @@ an invariant.
 triage (classify, ~ms) → route (order brains by class):
    reentrancy        → ReentrancyBrain
    access / arith    → FuzzerBrain (quick, time-boxed)
-   oracle/delegate/… → LLM  (cloud if key, else local Ollama)
+   oracle/delegate/… → CloudLLM (if key)
    fallback          → HeuristicBrain
         └────────────→ VERIFY (forge harness) → accept only PROVEN   (+ solution cache)
         └─ fail → feed the reason back, try the next brain / refine
@@ -25,13 +25,11 @@ triage (classify, ~ms) → route (order brains by class):
 - **ReentrancyBrain** — synthesizes a reentering actor (deposit → vulnerable
   withdraw → re-enter in `receive()`), covering reentrancy that plain fuzzing
   misses (EOA senders don't re-enter).
-- **CloudLLMBrain** — a strong cloud model (default `claude-sonnet-4-5`) via the
-  grading sandbox's permitted LLM-API network exception. Active only when
+- **CloudLLMBrain** — a strong cloud model via the grading sandbox's permitted
+  LLM-API network exception, called as a fallback chain
+  (`claude-sonnet-5 → claude-opus-4-8`). Active only when
   `ANTHROPIC_API_KEY`/`LLM_API_KEY` is set. Best generalization to undisclosed
   targets. Failures are fed back for self-correction.
-- **LocalLLMBrain** — a LOCAL Ollama model (`qwen2.5-coder:7b`) for a fully
-  offline, uncensored reasoning path when no key is available and a model is baked
-  into the image.
 - **HeuristicBrain** — deterministic static templates (reentrancy / access
   control / unchecked-underflow drain) as a last resort.
 
@@ -46,16 +44,6 @@ python3 agent_combined.py --contract <path> --invariants <path> --manifest <path
 ```
 Exit codes: `0` PROVEN · `1` not found in budget · `2` usage/internal error.
 Outputs to `--out`: `Exploit.sol` (best/proven candidate) and `attempts.log`.
-
-## One-time setup (local LLM, optional but recommended)
-
-```bash
-brew install ollama                 # or the official installer
-ollama serve &                      # binds http://localhost:11434
-ollama pull qwen2.5-coder:7b        # ~4.7GB (use :1.5b for a fast, weaker model)
-```
-No server / no model → the agent still runs on the fuzzer + heuristics (offline
-degrade). Override with `TRUST404_LLM_MODEL` / `TRUST404_LLM_URL`.
 
 ## Run
 
@@ -74,8 +62,6 @@ cat ./out/attempts.log
 
 - **FuzzerBrain**: discovered `setOwner` on OpenVault autonomously (shrunk to 1
   call) → synthesized PoC → harness **PROVEN** (`ownerUnchanged`).
-- **LocalLLMBrain (7b)**: attempt 1 failed to compile (interface bug) → fed back →
-  attempt 2 self-corrected → harness **PROVEN** (`ownerUnchanged`). Fully local.
 - **HeuristicBrain**: BadAccounting unchecked-underflow drain → **PROVEN**.
 - Loop mechanics unit-tested without forge/LLM: `python3 selftest_loop.py` (3/3).
 
@@ -83,8 +69,7 @@ cat ./out/attempts.log
 
 ```bash
 python3 selftest_loop.py                       # control loop (fast, offline)
-python3 selftest_localllm.py qwen2.5-coder:7b  # local model -> Exploit -> forge verify
-python3 selftest_llm_loop.py qwen2.5-coder:7b  # local model + feedback loop -> PROVEN
+python3 selftest_knowledge.py                  # knowledge-card injection (offline)
 ```
 
 ## Notes / limits
