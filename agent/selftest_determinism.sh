@@ -8,9 +8,9 @@
 # Usage: bash selftest_determinism.sh [TARGET_DIR] [N]
 set -euo pipefail
 
-TARGET="${1:-/Users/jaeho/Workspace/Hackathon/Trust404/trust404-track04-participant/targets/ReentrantVault}"
+TARGET="${1:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)/trust404-track04-participant/targets/ReentrantVault}"
 N="${2:-10}"
-IMAGE="${IMAGE:-track04-agent-mvp}"
+IMAGE="${IMAGE:-autopoc}"
 DOCKER="docker --context ${DOCKER_CONTEXT:-colima}"
 OUT="$(cd "$(dirname "$0")/.." && pwd)/out"
 mkdir -p "$OUT"

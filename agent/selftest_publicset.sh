@@ -5,8 +5,8 @@
 # capability of the agent.
 set -uo pipefail
 
-BUNDLE="${1:-/Users/jaeho/Workspace/Hackathon/Trust404/trust404-track04-participant}"
-IMAGE="${IMAGE:-track04-agent-mvp}"
+BUNDLE="${1:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)/trust404-track04-participant}"
+IMAGE="${IMAGE:-autopoc}"
 DOCKER="docker --context ${DOCKER_CONTEXT:-colima}"
 OUT="$(cd "$(dirname "$0")/.." && pwd)/out"
 mkdir -p "$OUT"

@@ -3,8 +3,8 @@
 # determinism on the new templates, and one cloud run on the default chain.
 set -uo pipefail
 DC="docker --context colima"
-IMG=track04-agent-mvp
-ROOT=/Users/jaeho/Workspace/Hackathon/Trust404
+IMG=autopoc
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 N="$ROOT/neutral-track4-targets"
 OUT="$ROOT/track04-agent-mvp/out/reverify_v3"; rm -rf "$OUT"; mkdir -p "$OUT"
 
@@ -33,7 +33,7 @@ run_off Elevator 2       # new template + determinism
 
 echo "== CLOUD (default chain sonnet-5 -> opus-4-8), GatekeeperTwo, 1 run =="
 od="$OUT/cloud_GatekeeperTwo"; mkdir -p "$od"
-$DC run --rm -e ANTHROPIC_API_KEY="$(cat /Users/jaeho/.trust404_key)" \
+$DC run --rm -e ANTHROPIC_API_KEY="${ANTHROPIC_API_KEY:-$(cat "$HOME/.trust404_key" 2>/dev/null)}" \
   -v "$N/GatekeeperTwo:/work/target:ro" -v "$od:/work/out" "$IMG" \
   --contract /work/target/src/GatekeeperTwo.sol --invariants /work/target/Invariants.sol \
   --manifest /work/target/manifest.json --out /work/out --timeout 300 --seed 42 --max-attempts 8 --no-cache >"$od/run.log" 2>&1

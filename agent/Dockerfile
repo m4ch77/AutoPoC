@@ -1,13 +1,13 @@
 # TRUST404 Track 04 - combined exploit-proving agent (finished image).
 #
 # Build context MUST be the bundle root (parent of agent/ and harness/):
-#   docker build -f agent/Dockerfile -t track04-agent-mvp .
+#   docker build -f agent/Dockerfile -t autopoc .
 #
 # Run (grading style): the exploit runs LOCALLY (no fork); the only permitted
 # network is the LLM API call. Pass a key to enable the strong cloud brain:
 #   docker run --rm -e ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY \
 #     -v "$PWD/../trust404-track04-participant/targets/OpenVault:/work/target:ro" \
-#     -v "$PWD/out:/work/out" track04-agent-mvp \
+#     -v "$PWD/out:/work/out" autopoc \
 #     --contract /work/target/src/OpenVault.sol \
 #     --invariants /work/target/Invariants.sol \
 #     --manifest  /work/target/manifest.json \

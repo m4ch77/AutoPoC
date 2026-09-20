@@ -1,7 +1,7 @@
-# TRUST404 Track 04 — Autonomous Exploit-Proof Agent
+# AutoPoC — Autonomous Exploit-Proof Agent (TRUST404 Track 04)
 
-타깃 스마트컨트랙트를 입력받아 **공격이 실제로 성립함을 실행되는 PoC(`Exploit.sol`)로 스스로 증명**하는
-에이전트. "의심"을 보고서로 남기지 않는다 — 조직위 하네스의 `IInvariants.checkAll`이 실제로 깨져야만
+**AutoPoC**는 타깃 스마트컨트랙트를 입력받아 **공격이 실제로 성립함을 실행되는 PoC(`Exploit.sol`)로 스스로 증명**하는
+에이전트다. "의심"을 보고서로 남기지 않는다 — 조직위 하네스의 `IInvariants.checkAll`이 실제로 깨져야만
 성공으로 인정한다.
 
 ## 제출물 (스펙 3종)
@@ -17,7 +17,7 @@
 ### Docker (채점과 동일 조건)
 ```bash
 # 빌드 (컨텍스트 = 이 레포 루트: agent/ + harness/ 의 부모)
-docker build -f agent/Dockerfile -t track04-agent-mvp .
+docker build -f agent/Dockerfile -t autopoc .
 
 # 타깃 디렉터리는 채점 측이 마운트로 제공한다(예: 조직위 번들의 targets/<Name>).
 TARGET=../trust404-track04-participant/targets/ReentrantVault
@@ -27,7 +27,7 @@ docker run --rm \
   -e ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY" \
   -v "$TARGET:/work/target:ro" \
   -v "$PWD/out:/work/out" \
-  track04-agent-mvp \
+  autopoc \
   --contract /work/target/src/ReentrantVault.sol \
   --invariants /work/target/Invariants.sol \
   --manifest  /work/target/manifest.json \
@@ -35,7 +35,7 @@ docker run --rm \
 
 # 완전 오프라인 (키 없음) — 결정론 도구만으로 degrade
 docker run --rm --network=none -v "$TARGET:/work/target:ro" \
-  -v "$PWD/out:/work/out" track04-agent-mvp \
+  -v "$PWD/out:/work/out" autopoc \
   --contract /work/target/src/ReentrantVault.sol --invariants /work/target/Invariants.sol \
   --manifest /work/target/manifest.json --out /work/out --timeout 300 --seed 42 --max-attempts 8
 ```

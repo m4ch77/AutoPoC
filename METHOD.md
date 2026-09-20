@@ -1,4 +1,4 @@
-# METHOD — track04-agent-mvp (triage-routed hybrid: fuzzer + LLM + reentrancy + heuristics)
+# METHOD — AutoPoC (triage-routed hybrid: fuzzer + LLM + reentrancy + heuristics)
 
 ## 1. 접근 방식
 **트리아지(정적 분류) → 라우팅(유형별 강한 두뇌 우선) → 실행 검증 게이트** 파이프라인이다.

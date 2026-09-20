@@ -1,6 +1,6 @@
 # 대회 문제풀이 조건 준수 보고서 (Track04)
 
-최종 제출 이미지 **V4(`183feaedde6f`, `track04-agent-mvp:latest`)** 에서 공개 6 + 포팅 8 = **14타깃**을
+최종 제출 이미지 **V4(`183feaedde6f`, `autopoc:latest`)** 에서 공개 6 + 포팅 8 = **14타깃**을
 대회 파이프라인(고정 Docker · 표준 CLI · 매니페스트 예산 · seed 42 · 클라우드 sonnet-5 primary)으로
 실행하고, 대회가 요구한 조건별로 대조했다.
 
@@ -87,7 +87,7 @@
 ## 6. 재현
 
 ```bash
-docker --context colima build -f agent/Dockerfile -t track04-agent-mvp .   # 고정 이미지
+docker --context colima build -f agent/Dockerfile -t autopoc .   # 고정 이미지
 bash agent/full_pass_v3.sh            # 공개6 + 포팅8 (클라우드) + 결정론
 # 개별: agent/run_compenv.sh {public|ported} · agent/det_check.sh
 # 무키 오프라인 공개셋: agent/offline_public_v3.sh

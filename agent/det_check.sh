@@ -5,10 +5,10 @@
 #  Part B: cloud-solved target -> run1 solves+caches, run2 replays from cache,
 #          must be BYTE-IDENTICAL ("PROVEN from cache").
 set -uo pipefail
-KEY="$(cat /Users/jaeho/.trust404_key)"
-IMG=track04-agent-mvp
+KEY="${ANTHROPIC_API_KEY:-$(cat "$HOME/.trust404_key" 2>/dev/null)}"
+IMG=autopoc
 DC="docker --context colima"
-ROOT=/Users/jaeho/Workspace/Hackathon/Trust404
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 OUT="$ROOT/track04-agent-mvp/out/determinism"
 rm -rf "$OUT"; mkdir -p "$OUT"
 

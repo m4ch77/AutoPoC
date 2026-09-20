@@ -7,10 +7,10 @@
 # Usage: run_compenv.sh <set>   where <set> = public | ported
 set -uo pipefail
 export PATH="$HOME/.foundry/bin:$PATH"
-KEY="$(cat /Users/jaeho/.trust404_key)"
-IMG=track04-agent-mvp
+KEY="${ANTHROPIC_API_KEY:-$(cat "$HOME/.trust404_key" 2>/dev/null)}"
+IMG=autopoc
 DC="docker --context colima"
-ROOT=/Users/jaeho/Workspace/Hackathon/Trust404
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 SET="${1:-public}"
 
 if [ "$SET" = "public" ]; then

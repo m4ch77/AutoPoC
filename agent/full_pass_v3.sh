@@ -2,7 +2,7 @@
 # Final full re-confirmation on the V3 image: public 6 + ported 8 (cloud on,
 # default chain) + determinism. This is the "final submission image" evidence.
 set -uo pipefail
-cd /Users/jaeho/Workspace/Hackathon/Trust404/track04-agent-mvp
+cd "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 echo "### PUBLIC (V3, cloud) ###"
 bash agent/run_compenv.sh public
 echo

@@ -3,9 +3,10 @@
 # Confirms: 4 vuln -> exit 0 (offline), 2 clean -> exit 1 (no false positives).
 set -uo pipefail
 DC="docker --context colima"
-IMG=track04-agent-mvp
-P=/Users/jaeho/Workspace/Hackathon/Trust404/trust404-track04-participant/targets
-OUT=/Users/jaeho/Workspace/Hackathon/Trust404/track04-agent-mvp/out/offline_public_v3
+IMG=autopoc
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+P="${TRUST404_BUNDLE:-$ROOT/trust404-track04-participant}/targets"
+OUT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/out/offline_public_v3"
 rm -rf "$OUT"; mkdir -p "$OUT"
 printf "target\texit\tbrain\texpect\tok\n" > "$OUT/SUMMARY.tsv"
 for row in "ReentrantVault:0" "OpenVault:0" "BadAccounting:0" "NaiveOracle:0" "SafeVault:1" "BoundedOwner:1"; do

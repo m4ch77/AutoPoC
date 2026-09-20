@@ -52,11 +52,11 @@ cat ./out/attempts.log
 
 ```bash
 # from the bundle root (parent of agent/ and harness/)
-docker build -f agent/Dockerfile -t track04-agent-mvp .
+docker build -f agent/Dockerfile -t autopoc .
 docker run --rm --network=none \
   -v "$PWD/../trust404-track04-participant/targets/BadAccounting:/work/target:ro" \
   -v "$PWD/out:/work/out" \
-  track04-agent-mvp \
+  autopoc \
   --contract /work/target/src/BadAccounting.sol \
   --invariants /work/target/Invariants.sol \
   --manifest /work/target/manifest.json \

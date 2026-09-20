@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>AutoPoC — Pitch</title>
+<style>
+  @page { size: 13.333in 7.5in; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    font-family: "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", -apple-system, system-ui, sans-serif;
+    color: #e8edf5;
+    background: #0b1020;
+  }
+  .slide {
+    position: relative;
+    width: 13.333in; height: 7.5in;
+    padding: 0.62in 0.8in;
+    page-break-after: always;
+    overflow: hidden;
+    background:
+      radial-gradient(1200px 500px at 88% -10%, rgba(76,201,240,0.14), transparent 60%),
+      radial-gradient(900px 500px at -5% 110%, rgba(57,217,138,0.10), transparent 55%),
+      linear-gradient(160deg, #0d1526 0%, #0b1020 60%, #090d1a 100%);
+    display: flex; flex-direction: column;
+  }
+  .slide:last-child { page-break-after: auto; }
+
+  .kicker { font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: #4cc9f0; font-weight: 700; }
+  h1 { font-size: 66px; font-weight: 800; letter-spacing: -1px; line-height: 1.02; }
+  h2 { font-size: 34px; font-weight: 800; letter-spacing: -0.5px; }
+  .accent { color: #39d98a; }
+  .cyan { color: #4cc9f0; }
+  .muted { color: #94a3b8; }
+  .rule { height: 3px; width: 62px; background: linear-gradient(90deg,#4cc9f0,#39d98a); border-radius: 3px; margin: 14px 0 22px; }
+
+  .head { display:flex; align-items:baseline; gap:16px; margin-bottom: 6px; }
+  .head h2 { }
+  .head .no { font-size: 14px; color:#4b5b74; font-weight:700; letter-spacing:2px; }
+
+  ul { list-style: none; display:flex; flex-direction:column; gap: 15px; margin-top: 6px; }
+  li { position: relative; padding-left: 30px; font-size: 21px; line-height: 1.42; color:#d7deea; }
+  li:before { content:""; position:absolute; left:2px; top:11px; width:9px; height:9px; border-radius:2px; background: #4cc9f0; transform: rotate(45deg); }
+  li b { color:#fff; font-weight:700; }
+  li .s { color:#8ba0bd; font-size: 18px; }
+
+  .cards { display:grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 10px; }
+  .card { background: rgba(255,255,255,0.035); border:1px solid rgba(120,150,190,0.18); border-radius: 14px; padding: 20px 22px; }
+  .card h3 { font-size: 18px; color:#fff; margin-bottom:8px; display:flex; align-items:center; gap:8px; }
+  .card p { font-size: 16.5px; color:#aab7c9; line-height:1.45; }
+  .card .ico { width:22px; height:22px; border-radius:6px; background:linear-gradient(135deg,#4cc9f0,#39d98a); display:inline-block; }
+
+  .flow { display:flex; align-items:stretch; gap:12px; margin: 18px 0 6px; }
+  .step { flex:1; background: rgba(76,201,240,0.06); border:1px solid rgba(76,201,240,0.28); border-radius:12px; padding:16px; text-align:center; }
+  .step .t { font-size:16px; font-weight:700; color:#fff; }
+  .step .d { font-size:13.5px; color:#9fb0c6; margin-top:6px; line-height:1.35; }
+  .arrow { align-self:center; color:#4cc9f0; font-size:26px; font-weight:800; }
+  .gate { margin-top:8px; background: rgba(57,217,138,0.08); border:1px solid rgba(57,217,138,0.35); border-radius:12px; padding:14px 18px; font-size:18px; color:#d7f5e6; }
+  .gate b { color:#39d98a; }
+
+  .stats { display:grid; grid-template-columns: repeat(4,1fr); gap:16px; margin: 14px 0 18px; }
+  .stat { background: rgba(255,255,255,0.04); border:1px solid rgba(120,150,190,0.2); border-radius:14px; padding: 20px 16px; text-align:center; }
+  .stat .n { font-size: 40px; font-weight:800; color:#39d98a; line-height:1; }
+  .stat .l { font-size: 14.5px; color:#a7b4c6; margin-top:9px; line-height:1.3; }
+
+  table { width:100%; border-collapse: collapse; margin-top: 6px; font-size: 17px; }
+  th, td { text-align:left; padding: 11px 12px; border-bottom: 1px solid rgba(120,150,190,0.16); }
+  th { color:#4cc9f0; font-size:13px; letter-spacing:1.5px; text-transform:uppercase; }
+  td.v { color:#39d98a; font-weight:700; }
+
+  .foot { position:absolute; bottom:0.42in; left:0.8in; right:0.8in; display:flex; justify-content:space-between; font-size:12.5px; color:#4b5b74; letter-spacing:1px; }
+
+  /* Title slide */
+  .title-wrap { flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .logo { display:flex; align-items:center; gap:16px; margin-bottom: 26px; }
+  .logo .mark { width:60px; height:60px; border-radius:14px; background:linear-gradient(135deg,#4cc9f0,#39d98a); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:30px; color:#07101c; box-shadow:0 8px 30px rgba(76,201,240,0.35); }
+  .tagline { font-size: 24px; color:#c3ccdb; margin-top: 22px; line-height:1.4; max-width: 9.5in; }
+  .tagline .accent { font-weight:700; }
+  .badges { display:flex; gap:12px; margin-top: 34px; }
+  .badge { font-size:15px; color:#cfe9ff; background: rgba(76,201,240,0.10); border:1px solid rgba(76,201,240,0.3); border-radius:999px; padding:9px 18px; }
+</style>
+</head>
+<body>
+
+<!-- 1. TITLE -->
+<section class="slide">
+  <div class="title-wrap">
+    <div class="logo">
+      <div class="mark">A</div>
+      <div class="kicker">TRUST404 · TRACK 04</div>
+    </div>
+    <h1>AutoPoC</h1>
+    <h1 class="muted" style="font-size:40px; font-weight:700; margin-top:8px;">Autonomous Exploit-Proof Agent</h1>
+    <div class="tagline">
+      취약점 <b class="cyan">"의심"</b>을 보고서로 남기지 않는다.<br>
+      공격이 실제로 성립함을 <b class="accent">실행되는 PoC로 스스로 증명</b>하는 에이전트.
+    </div>
+    <div class="badges">
+      <span class="badge">실행 증명 기반</span>
+      <span class="badge">오프라인 결정론</span>
+      <span class="badge">오탐 0</span>
+      <span class="badge">미공개 유형 일반화</span>
+    </div>
+  </div>
+  <div class="foot"><span>AutoPoC — Autonomous Exploit-Proof Agent</span><span>01 / 06</span></div>
+</section>
+
+<!-- 2. PROBLEM -->
+<section class="slide">
+  <div class="head"><span class="no">01</span><h2>문제 정의</h2></div>
+  <div class="rule"></div>
+  <ul>
+    <li><b>감사의 병목은 "확인"이다.</b> 정적 분석·LLM 도구는 취약 <span class="cyan">가능성</span>을 쏟아내지만, 진짜 성립 여부 판단은 사람 몫 — 느리고 비싸다.</li>
+    <li><b>"가능성 리포트"는 신뢰할 수 없다.</b> 오탐(false positive)이 섞여 있어, 리포트 한 줄마다 사람이 다시 검증해야 한다.</li>
+    <li><b>재현이 어렵다.</b> 같은 입력에도 결과가 흔들리면 회귀 검증·감사 추적이 불가능하다.</li>
+    <li class="s">→ 필요한 것: 공격 성립을 <b class="accent">스스로 · 재현 가능하게 · 오탐 없이</b> 증명하는 자율 에이전트.</li>
+  </ul>
+  <div class="foot"><span>문제 정의</span><span>02 / 06</span></div>
+</section>
+
+<!-- 3. THREAT MODEL -->
+<section class="slide">
+  <div class="head"><span class="no">02</span><h2>위협 모델</h2></div>
+  <div class="rule"></div>
+  <div class="cards">
+    <div class="card">
+      <h3><span class="ico"></span>입력 &amp; 공격자 능력</h3>
+      <p>타깃 컨트랙트 소스 + 불변식(<i>Invariants</i>) + manifest를 입력받는다. 공격자는 임의 트랜잭션 시퀀스·재진입·외부 콜·자금 이동을 수행할 수 있다.</p>
+    </div>
+    <div class="card">
+      <h3><span class="ico"></span>성공의 정의</h3>
+      <p>조직위 하네스 <b style="color:#fff">IInvariants.checkAll</b>이 실제로 깨져야만 성공. <b class="accent">에이전트도 LLM도 판정 권한이 없다</b> — 판정은 forge 실행뿐.</p>
+    </div>
+    <div class="card">
+      <h3><span class="ico"></span>신뢰 경계</h3>
+      <p>LLM은 <b style="color:#fff">소스 추론만</b> 한다 — 파일·웹 접근 없음, 타깃별 정답 하드코딩 없음. 모든 후보는 하네스 실행으로만 채택된다.</p>
+    </div>
+    <div class="card">
+      <h3><span class="ico"></span>안전장치</h3>
+      <p>멀쩡한 타깃엔 거짓 성공을 만들지 않고 <b class="cyan">기권(exit 1)</b>. 네트워크는 허용된 LLM API 예외만 — 오프라인에선 완전 차단으로도 동작.</p>
+    </div>
+  </div>
+  <div class="foot"><span>위협 모델</span><span>03 / 06</span></div>
+</section>
+
+<!-- 4. HOW IT WORKS -->
+<section class="slide">
+  <div class="head"><span class="no">03</span><h2>동작 방식</h2></div>
+  <div class="rule"></div>
+  <div class="flow">
+    <div class="step"><div class="t">Triage</div><div class="d">수 ms 정적 분류로 취약 유형 판별</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="t">오프라인 우선 라우팅</div><div class="d">퍼저 · 재진입 브레인 · 휴리스틱 템플릿 (결정론·무비용)</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="t">클라우드 폴백</div><div class="d">sonnet-5 → opus-4-8 체인, 키 있을 때만</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="t">검증 게이트</div><div class="d">forge 하네스로 실제 실행</div></div>
+  </div>
+  <div class="gate">각 후보 → 하네스 실행 → <b>checkAll이 깨지면 PROVEN</b>, 아니면 다음 후보. 정답 하드코딩 없이 소스·퍼징·추론에서만 유도.</div>
+  <ul style="margin-top:16px; gap:11px;">
+    <li><b>오프라인 우선</b> — 싼 결정론 두뇌를 클라우드보다 앞세워 결정론 강화 + API 비용 절감.</li>
+    <li><b>판정 권한은 하네스뿐</b> — 에이전트·LLM은 성공을 선언하지 못한다.</li>
+  </ul>
+  <div class="foot"><span>동작 방식</span><span>04 / 06</span></div>
+</section>
+
+<!-- 5. VERIFICATION -->
+<section class="slide">
+  <div class="head"><span class="no">04</span><h2>검증 결과</h2></div>
+  <div class="rule"></div>
+  <div class="stats">
+    <div class="stat"><div class="n">6/6</div><div class="l">공개셋<br>(취약 4 발견 + 멀쩡 2 기권)</div></div>
+    <div class="stat"><div class="n">8/8</div><div class="l">포팅 미공개 유형<br>(클라우드 폴백)</div></div>
+    <div class="stat"><div class="n">14/14</div><div class="l">종료코드 정확<br>(발견 0 / 기권 1)</div></div>
+    <div class="stat"><div class="n">100%</div><div class="l">결정론<br>바이트 동일 재현</div></div>
+  </div>
+  <table>
+    <tr><th>항목</th><th>결과</th><th>근거</th></tr>
+    <tr><td>공개셋 4종 취약점</td><td class="v">전부 오프라인 발견</td><td class="muted">재진입·퍼저·휴리스틱, 네트워크 차단 하에서도 PROVEN</td></tr>
+    <tr><td>멀쩡한 타깃 2종</td><td class="v">오탐 0 · 기권</td><td class="muted">예산 소진 후 exit 1, 거짓 성공 없음</td></tr>
+    <tr><td>미공개 유형 8종</td><td class="v">전부 예산 내 발견</td><td class="muted">클라우드 추론 일반화 (파일·정답 접근 없음)</td></tr>
+    <tr><td>결정론</td><td class="v">바이트 동일</td><td class="muted">오프라인 N=3 신규 실행 + 클라우드 캐시 리플레이</td></tr>
+    <tr><td>채점 조건</td><td class="v">준수</td><td class="muted">Foundry v1.0.0 · 하네스 byte-identical · validate-submission PASS</td></tr>
+  </table>
+  <div class="foot"><span>검증 결과 — 최종 이미지 실측</span><span>05 / 06</span></div>
+</section>
+
+<!-- 6. CLOSING -->
+<section class="slide">
+  <div class="head"><span class="no">05</span><h2>왜 AutoPoC인가</h2></div>
+  <div class="rule"></div>
+  <div class="cards">
+    <div class="card"><h3><span class="ico"></span>증명 기반</h3><p>"의심"이 아니라 <b class="accent">실행되는 PoC</b>. 하네스가 깨져야만 성공 — 사람이 다시 검증할 필요가 없다.</p></div>
+    <div class="card"><h3><span class="ico"></span>오프라인 결정론</h3><p>키 없이도 공개셋 취약점 발견. 같은 입력 → <b class="cyan">바이트 동일</b> 결과로 감사 추적 가능.</p></div>
+    <div class="card"><h3><span class="ico"></span>오탐 0</h3><p>멀쩡한 타깃엔 기권. 리포트의 모든 성공이 <b>실제 성립</b>임을 보장.</p></div>
+    <div class="card"><h3><span class="ico"></span>미공개 일반화</h3><p>본 적 없는 유형도 클라우드 추론으로 PoC 합성 — 정답 하드코딩 없이.</p></div>
+  </div>
+  <div class="gate" style="margin-top:22px; font-size:20px; text-align:center;">실행되는 PoC = 신뢰. <b>AutoPoC는 취약점을 주장하지 않고 증명한다.</b></div>
+  <div class="foot"><span>AutoPoC — Autonomous Exploit-Proof Agent · TRUST404 Track 04</span><span>06 / 06</span></div>
+</section>
+
+</body>
+</html>
